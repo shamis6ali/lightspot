@@ -1,9 +1,19 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
-import 'explore/view/explore_page.dart';
-import 'explore/view/saved_page.dart';   // we just added this
+import 'package:lightspot_v1/common/data/app_preferences.dart';
+import 'package:lightspot_v1/common/di/injection_container.dart';
+import 'package:lightspot_v1/common/util/nav.dart';
+import 'package:lightspot_v1/features/bottom_navigation/cubits/navigation_cubit.dart';
+import 'package:lightspot_v1/features/bottom_navigation/widgets/navigation_container.dart';
+import 'package:lightspot_v1/features/splash/splash_page.dart';
+import 'package:nav/nav.dart';
 
-void main() => runApp(const PhotographySpotsApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
+  await AppPreferences.init();
+  runApp(const PhotographySpotsApp());
+}
 
 class PhotographySpotsApp extends StatelessWidget {
   const PhotographySpotsApp({super.key});
@@ -14,13 +24,12 @@ class PhotographySpotsApp extends StatelessWidget {
       title: 'Photography Spots',
       theme: ThemeData.dark(useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      // initial route
-      home: const ExplorePage(),
-      // named routes for BottomNav
-      routes: {
-        '/explore': (_) => const ExplorePage(),
-        '/saved'  : (_) => const SavedPage(),
-      },
+      home: Builder(
+        builder: (context) {
+          NavHelper.init(context);
+          return const SplashPage();
+        }
+      ),
     );
   }
 }
