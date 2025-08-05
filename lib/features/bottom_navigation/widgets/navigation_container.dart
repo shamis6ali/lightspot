@@ -34,9 +34,10 @@ class NavigationContainerState extends State<NavigationContainer>
       child: CustomBottomNav(
         items: navigationCubit.tabs,
         onPageChanged: _changeTab,
-        selectedIconColor: AppColors.white,
-        unSelectedIconColor: AppColors.red,
-        backgroundColor: AppColors.primary,
+        selectedIconColor: AppColors.bottomNavSelected,
+        unSelectedIconColor: AppColors.bottomNavUnselected,
+        backgroundColor: AppColors.bottomNavBackground,
+        titleColor: AppColors.bottomNavSelected,
       ),
     );
   }
