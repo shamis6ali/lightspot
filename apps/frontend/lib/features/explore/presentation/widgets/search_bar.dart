@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../pages/explore_page.dart';
-import 'package:lightspot_v1/common/theme/app_colors.dart';
+import '../../../../common/theme/app_colors.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({

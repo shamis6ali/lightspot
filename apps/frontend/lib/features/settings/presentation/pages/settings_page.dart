@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lightspot_v1/common/util/nav.dart';
-import 'package:lightspot_v1/features/auth/presentation/pages/login_screen.dart';
+import '../../../../common/util/nav.dart';
+import '../../../auth/presentation/pages/login_screen.dart';
 import '../../../../common/data/app_preferences.dart';
 
 class SettingsPage extends StatelessWidget {

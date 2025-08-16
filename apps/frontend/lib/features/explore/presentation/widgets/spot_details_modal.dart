@@ -1,10 +1,10 @@
 // lib/explore/widgets/spot_details_modal.dart
 
 import 'package:flutter/material.dart';
-import 'package:lightspot_v1/features/explore/presentation/widgets/spot_details_content.dart';
+import 'spot_details_content.dart';
 import '../../data/models/spot.dart';           // ⬅︎  put Spot/SpotItem here (or adjust path)
 import '../pages/explore_page.dart';     // ⬅︎  same for AppColors
-import 'package:lightspot_v1/common/theme/app_colors.dart';
+import '../../../../common/theme/app_colors.dart';
 
 class SpotDetailsModal extends StatelessWidget {
   final Spot spot;

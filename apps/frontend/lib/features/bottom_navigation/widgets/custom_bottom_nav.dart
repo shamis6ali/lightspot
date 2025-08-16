@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lightspot_v1/common/di/injection_container.dart';
-import 'package:lightspot_v1/common/theme/app_colors.dart';
-import 'package:lightspot_v1/features/bottom_navigation/cubits/navigation_cubit.dart';
-import 'package:lightspot_v1/features/bottom_navigation/user_nav_item.dart';
+import '../../../common/di/injection_container.dart';
+import '../../../common/theme/app_colors.dart';
+import '../cubits/navigation_cubit.dart';
+import '../user_nav_item.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final List<UserNavItem> items;

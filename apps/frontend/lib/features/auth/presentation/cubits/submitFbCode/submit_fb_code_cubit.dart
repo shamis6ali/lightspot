@@ -6,9 +6,9 @@ import 'package:meta/meta.dart';
 
 import '../../../../../common/dart/base_cubit.dart';
 import '../../../../../common/dart/request_state.dart';
-import 'package:lightspot_v1/features/auth/data/models/params/submit_fb_code_params.dart';
-import 'package:lightspot_v1/features/auth/data/repository/auth_repo.dart';
-import 'package:lightspot_v1/features/auth/data/models/responses/verify_fb_response.dart';
+import '../../../data/models/params/submit_fb_code_params.dart';
+import '../../../data/repository/auth_repo.dart';
+import '../../../data/models/responses/verify_fb_response.dart';
 
 part 'submit_fb_code_state.dart';
 

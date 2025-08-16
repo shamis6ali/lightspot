@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import '../pages/explore_page.dart';          // Prefer a small colors file
 // ↑ remove the explore_page import; you only needed AppColors.
-import 'package:lightspot_v1/common/theme/app_colors.dart';
+import '../../../../common/theme/app_colors.dart';
 
 // A PRESENTATION-ONLY WIDGET
 class TagFilterRow extends StatelessWidget {

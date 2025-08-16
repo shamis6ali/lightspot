@@ -3,10 +3,10 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
-import 'package:lightspot_v1/common/dart/base_cubit.dart';
-import 'package:lightspot_v1/common/dart/request_state.dart';
-import 'package:lightspot_v1/features/bottom_navigation/cubits/navigation_variables.dart';
-import 'package:lightspot_v1/features/bottom_navigation/user_nav_item.dart';
+import '../../../common/dart/base_cubit.dart';
+import '../../../common/dart/request_state.dart';
+import 'navigation_variables.dart';
+import '../user_nav_item.dart';
 
 
 part 'navigation_state.dart';

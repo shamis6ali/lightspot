@@ -6,9 +6,9 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../../common/dart/base_cubit.dart';
 import '../../../../../common/dart/request_state.dart';
-import 'package:lightspot_v1/features/auth/data/models/params/register_params.dart';
-import 'package:lightspot_v1/features/auth/data/models/responses/register_response.dart';
-import 'package:lightspot_v1/features/auth/data/repository/auth_repo.dart';
+import '../../../data/models/params/register_params.dart';
+import '../../../data/models/responses/register_response.dart';
+import '../../../data/repository/auth_repo.dart';
 
 part 'signup_state.dart';
 
