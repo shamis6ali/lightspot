@@ -22,11 +22,11 @@ class LoginCubit extends BaseCubit<LoginState> {
   LoginCubit(this._repository) : super(LoginState.initial());
 
   Future<void> login({
-    required String phone,
+    required String email,
     required String password,
     required BuildContext context,
   }) async {
-    final params = LoginParams(phone: phone, password: password);
+    final params = LoginParams(email: email, password: password);
     
     await callAndFold<LoginResponse>(
       future: _repository.login(params: params),

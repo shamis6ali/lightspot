@@ -9,6 +9,9 @@ import '../cubits/login_info/login_info_cubit.dart';
 import 'forget_password_screen.dart';
 import 'signup_screen.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -18,14 +21,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
   @override
   void dispose() {
     super.dispose();
-    _phoneController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
   }
 
@@ -139,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: Column(
         children: [
-          _buildPhoneField(),
+          _buildEmailField(),
           const SizedBox(height: 20),
           _buildPasswordField(),
           const SizedBox(height: 16),
@@ -153,14 +156,14 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildPhoneField() {
+  Widget _buildEmailField() {
     return TextFormField(
-      controller: _phoneController,
-      keyboardType: TextInputType.phone,
+      controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        labelText: 'Phone Number',
-        hintText: 'Enter your phone number',
-        prefixIcon: const Icon(Icons.phone, color: Color(0xFF667eea)),
+        labelText: 'Email or Username',
+        hintText: 'Enter your email or username',
+        prefixIcon: const Icon(Icons.email, color: Color(0xFF667eea)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -171,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your phone number';
+          return 'Please enter your email or username';
         }
         return null;
       },
@@ -244,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 : () {
                     if (formKey.currentState!.validate()) {
                       context.read<LoginCubit>().login(
-                            phone: _phoneController.text,
+                            email: _emailController.text,
                             password: _passwordController.text,
                             context: context,
                           );
@@ -334,16 +337,12 @@ class _LoginScreenState extends State<LoginScreen> {
             _buildSocialButton(
               icon: Icons.g_mobiledata,
               label: 'Google',
-              onTap: () {
-                // TODO: Implement Google login
-              },
+              onTap:_handleGoogleSignIn,
             ),
             _buildSocialButton(
               icon: Icons.apple,
               label: 'Apple',
-              onTap: () {
-                // TODO: Implement Apple login
-              },
+              onTap: _handleAppleSignIn,
             ),
           ],
         ),
@@ -422,5 +421,39 @@ class _LoginScreenState extends State<LoginScreen> {
       context,
       MaterialPageRoute(builder: (context) => const ForgetPasswordScreen()),
     );
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final account = await GoogleSignIn().signIn();
+      if (!context.mounted) return;
+      if (account != null){
+        messenger.showSnackBar(
+          SnackBar(content: Text('Signed in as ${account.email}')),
+        );
+      }
+    } catch(e){
+      if (!context.mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text('Google sign in failed: $e')),
+      );
+    }
+  }
+
+  Future<void> _handleAppleSignIn() async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      );
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(content: Text('Signed in with Apple: ${credential.email ?? ''}')));
+    } catch(e){
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(content: Text('Apple sign in failed: $e')));
+    }
   }
 }

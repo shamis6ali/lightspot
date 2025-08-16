@@ -32,6 +32,8 @@ dependencies:
   meta: ^1.15.0
   equatable: ^2.0.5
   dartz: ^0.10.1
+  google_sign_in: ^6.1.5
+  sign_in_with_apple: ^5.0.0
   
 dev_dependencies:
   flutter_test:
