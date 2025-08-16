@@ -7,9 +7,9 @@ import 'package:injectable/injectable.dart';
 import '../../../../../common/dart/base_cubit.dart';
 import '../../../../../common/dart/request_state.dart';
 import '../../pages/verifty_code_screen.dart';
-import 'package:lightspot_v1/features/auth/data/models/params/send_fb_code_params.dart';
-import 'package:lightspot_v1/features/auth/data/repository/auth_repo.dart';
-import 'package:lightspot_v1/features/auth/presentation/cubits/submitFbCode/submit_fb_code_cubit.dart';
+import '../../../data/models/params/send_fb_code_params.dart';
+import '../../../data/repository/auth_repo.dart';
+import '../submitFbCode/submit_fb_code_cubit.dart';
 
 part 'send_fb_code_state.dart';
 

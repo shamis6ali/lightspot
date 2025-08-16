@@ -8,10 +8,10 @@ import '../../../../../common/dart/base_cubit.dart';
 import '../../../../../common/dart/request_state.dart';
 import '../../../../../common/di/injection_container.dart';
 import '../login_info/login_info_cubit.dart';
-import 'package:lightspot_v1/features/auth/data/models/responses/login_response.dart';
-import 'package:lightspot_v1/features/auth/presentation/cubits/verify_code/verify_code_cubit.dart';
-import 'package:lightspot_v1/features/auth/data/models/params/login_params.dart';
-import 'package:lightspot_v1/features/auth/data/repository/auth_repo.dart';
+import '../../../data/models/responses/login_response.dart';
+import '../verify_code/verify_code_cubit.dart';
+import '../../../data/models/params/login_params.dart';
+import '../../../data/repository/auth_repo.dart';
 
 part 'login_state.dart';
 

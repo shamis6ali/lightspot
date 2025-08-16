@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../explore/data/models/spot.dart';
-import 'package:lightspot_v1/common/theme/app_colors.dart';
+import '../../../../common/theme/app_colors.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  Saved Page (Stateful so we can mutate the active‑category filter)

@@ -25,12 +25,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart'
     hide ClusterManager, Cluster;
 import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart'
     as cm;
-import 'package:lightspot_v1/features/explore/presentation/widgets/search_bar.dart' as cst_src;
-import 'package:lightspot_v1/features/explore/presentation/widgets/tag_filter_row.dart';
-import 'package:lightspot_v1/features/explore/presentation/widgets/map_controls.dart';
-import 'package:lightspot_v1/features/explore/data/models/spot.dart' show Spot, SpotItem, demoItems, mockSpot, riverBank;
-import 'package:lightspot_v1/features/explore/presentation/widgets/spot_details_modal.dart';
-import 'package:lightspot_v1/common/theme/app_colors.dart';
+import '../widgets/search_bar.dart' as cst_src;
+import '../widgets/tag_filter_row.dart';
+import '../widgets/map_controls.dart';
+import '../../data/models/spot.dart' show Spot, SpotItem, demoItems, mockSpot, riverBank;
+import '../widgets/spot_details_modal.dart';
+import '../../../../common/theme/app_colors.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 //  Theme
 // ─────────────────────────────────────────────────────────────────────────────

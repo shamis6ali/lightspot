@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 import '../../../../../common/dart/base_cubit.dart';
 import '../../../../../common/dart/request_state.dart';
-import 'package:lightspot_v1/features/auth/data/repository/auth_repo.dart';
+import '../../../data/repository/auth_repo.dart';
 
 part 'delete_account_state.dart';
 

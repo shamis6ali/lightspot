@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lightspot_v1/features/explore/presentation/pages/explore_page.dart';
-import 'package:lightspot_v1/features/saved/presentation/pages/saved_page.dart';
-import 'package:lightspot_v1/features/bottom_navigation/user_nav_item.dart';
-import 'package:lightspot_v1/features/trending/presentation/pages/trending_page.dart';
-import 'package:lightspot_v1/features/community/presentation/pages/community_page.dart';
-import 'package:lightspot_v1/features/settings/presentation/pages/settings_page.dart';
+import '../explore/presentation/pages/explore_page.dart';
+import '../saved/presentation/pages/saved_page.dart';
+import '../trending/presentation/pages/trending_page.dart';
+import '../community/presentation/pages/community_page.dart';
+import '../settings/presentation/pages/settings_page.dart';
 
 enum UserNavItem {
   explore(

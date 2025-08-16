@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lightspot_v1/common/dart/failure.dart';
-import 'package:lightspot_v1/common/dart/request_state.dart';
+import 'failure.dart';
+import 'request_state.dart';
 
 
 class BaseCubit<State> extends Cubit<State> {

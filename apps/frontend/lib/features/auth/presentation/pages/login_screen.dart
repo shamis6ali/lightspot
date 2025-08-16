@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lightspot_v1/common/util/nav.dart';
-import 'package:lightspot_v1/features/bottom_navigation/widgets/navigation_container.dart';
+import '../../../../common/util/nav.dart';
+import '../../../bottom_navigation/widgets/navigation_container.dart';
 
 import '../../../../common/di/injection_container.dart';
 import '../cubits/login/login_cubit.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lightspot_v1/common/di/injection_container.dart';
-import 'package:lightspot_v1/common/theme/app_colors.dart';
-import 'package:lightspot_v1/features/bottom_navigation/cubits/navigation_cubit.dart';
-import 'package:lightspot_v1/features/bottom_navigation/user_nav_item.dart';
-import 'package:lightspot_v1/features/bottom_navigation/widgets/custom_bottom_nav.dart';
+import '../../../common/di/injection_container.dart';
+import '../../../common/theme/app_colors.dart';
+import '../cubits/navigation_cubit.dart';
+import '../user_nav_item.dart';
+import 'custom_bottom_nav.dart';
 import 'package:nav/nav.dart';
 
 class NavigationContainer extends StatefulWidget {
