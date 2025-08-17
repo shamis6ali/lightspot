@@ -45,21 +45,12 @@ class _SavedPageState extends State<SavedPage> {
   // ────────────────────────────────────────────────────────────── UI BUILD ───
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).padding.bottom;
     final topInset = MediaQuery.of(context).padding.top;
-
-    // apply simple client‑side tag filter
-    final filtered =
-        _activeCategory == 0
-            ? _saved
-            : _saved.where((s) {
-              const catTags = ['Landscape', 'Urban', 'Waterfront', 'Forest'];
-              return s.tags.contains(catTags[_activeCategory - 1]);
-            }).toList();
+    final bottomInset = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: AppColors.dark,
-      body: _buildBody(filtered, bottomInset, topInset),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: _buildBody(_saved, bottomInset, topInset),
     );
   }
 
@@ -127,71 +118,76 @@ class _ProfileBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.darkGray,
       padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).dividerColor,
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         children: [
           Container(
-            width: 48,
-            height: 48,
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.accent, width: 2),
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(
+                color: AppColors.accent,
+                width: 2,
+              ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(22),
+              borderRadius: BorderRadius.circular(30),
               child: Image.network(
-                'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg',
-                width: 44,
-                height: 44,
+                'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg',
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Jessica Parker',
                   style: TextStyle(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
-                  '42 saved photography spots',
+                  'Photography Enthusiast',
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: Row(
-              children: const [
-                Icon(
-                  FontAwesomeIcons.shareNodes,
-                  size: 12,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 4),
-                Text(
-                  'Share',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Text(
+                      '24 saved spots',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        FontAwesomeIcons.share,
+                        color: AppColors.accent,
+                        size: 20,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -209,36 +205,73 @@ class _StatsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.dark,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).dividerColor,
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         children: [
-          Expanded(
-            child: _StatItem(
-              label: 'Total Photos',
-              value: '248',
+          _buildStatItem(
+            context,
+            'Total Photos',
+            '156',
+            FontAwesomeIcons.camera,
+          ),
+          const SizedBox(width: 32),
+          _buildStatItem(
+            context,
+            'Categories',
+            '8',
+            FontAwesomeIcons.tags,
+          ),
+          const SizedBox(width: 32),
+          _buildStatItem(
+            context,
+            'Countries',
+            '12',
+            FontAwesomeIcons.globe,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(BuildContext context, String label, String value, IconData icon) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.accent.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Icon(
+              icon,
+              color: AppColors.accent,
+              size: 20,
             ),
           ),
-          Container(
-            width: 1,
-            height: 40,
-            color: AppColors.lightGray,
-          ),
-          Expanded(
-            child: _StatItem(
-              label: 'Categories',
-              value: '8',
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          Container(
-            width: 1,
-            height: 40,
-            color: AppColors.lightGray,
-          ),
-          Expanded(
-            child: _StatItem(
-              label: 'Countries',
-              value: '12',
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
         ],
@@ -247,96 +280,44 @@ class _StatsSection extends StatelessWidget {
   }
 }
 
-/// Individual stat item
-class _StatItem extends StatelessWidget {
-  const _StatItem({
-    required this.label,
-    required this.value,
-  });
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _CategoryRow extends StatelessWidget {
-  const _CategoryRow({required this.active, required this.onSelected});
-
   final int active;
   final ValueChanged<int> onSelected;
 
-  static const _chipData = [
-    (null, 'All Spots'),
-    (FontAwesomeIcons.mountain, 'Landscape'),
-    (FontAwesomeIcons.city, 'Urban'),
-    (FontAwesomeIcons.water, 'Waterfront'),
-    (FontAwesomeIcons.tree, 'Forest'),
-  ];
+  const _CategoryRow({required this.active, required this.onSelected});
 
   @override
   Widget build(BuildContext context) {
+    final categories = ['All', 'Landscape', 'Urban', 'Portrait', 'Nature', 'Architecture'];
+    
     return Container(
-      color: AppColors.dark,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            for (var i = 0; i < _chipData.length; i++)
+            for (int i = 0; i < categories.length; i++)
               Padding(
-                padding: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.only(right: 12),
                 child: GestureDetector(
                   onTap: () => onSelected(i),
                   child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: i == active ? AppColors.accent : AppColors.darkGray,
+                      color: i == active ? AppColors.accent : Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: i == active ? AppColors.accent : Theme.of(context).dividerColor,
+                        width: 1,
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    child: Row(
-                      children: [
-                        if (_chipData[i].$1 != null) ...[
-                          Icon(
-                            _chipData[i].$1!,
-                            size: 12,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 4),
-                        ],
-                        Text(
-                          _chipData[i].$2,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      categories[i],
+                      style: TextStyle(
+                        color: i == active ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                        fontWeight: i == active ? FontWeight.bold : FontWeight.normal,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
@@ -348,51 +329,41 @@ class _CategoryRow extends StatelessWidget {
   }
 }
 
-class _SpotCard extends StatefulWidget {
+class _SpotCard extends StatelessWidget {
+  final Spot spot;
+  final bool liked;
+  final ValueChanged<bool> onLikeToggled;
+
   const _SpotCard({
     required this.spot,
     required this.liked,
     required this.onLikeToggled,
   });
 
-  final Spot spot;
-  final bool liked;
-  final ValueChanged<bool> onLikeToggled;
-
-  @override
-  State<_SpotCard> createState() => _SpotCardState();
-}
-
-class _SpotCardState extends State<_SpotCard> {
-  late bool _liked;
-
-  @override
-  void initState() {
-    super.initState();
-    _liked = widget.liked;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkGray,
-        borderRadius: BorderRadius.circular(16),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor,
+          width: 1,
+        ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // cover image + heart + overlay
+          // Image with overlay
           Stack(
             children: [
-              Container(
-                height: 192, // 48 * 4 = 192px
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: Image.network(
-                    widget.spot.coverUrl,
-                    fit: BoxFit.cover,
-                  ),
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
+                child: Image.network(
+                  spot.coverUrl,
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
                 ),
               ),
               // Heart button
@@ -400,68 +371,48 @@ class _SpotCardState extends State<_SpotCard> {
                 top: 12,
                 right: 12,
                 child: GestureDetector(
-                  onTap: () {
-                    setState(() => _liked = !_liked);
-                    widget.onLikeToggled(_liked);
-                  },
+                  onTap: () => onLikeToggled(!liked),
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.accent,
-                      shape: BoxShape.circle,
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.all(8),
                     child: Icon(
-                      _liked
-                          ? FontAwesomeIcons.solidHeart
-                          : FontAwesomeIcons.heart,
-                      size: 12,
-                      color: Colors.white,
+                      liked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                      color: liked ? AppColors.accent : Colors.white,
+                      size: 20,
                     ),
                   ),
                 ),
               ),
-              // Gradient overlay with title and location
+              // Rating badge
               Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
+                top: 12,
+                left: 12,
                 child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [Colors.black, Colors.transparent],
-                    ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        widget.spot.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+                      const Icon(
+                        FontAwesomeIcons.solidStar,
+                        color: Colors.amber,
+                        size: 12,
                       ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Icon(
-                            FontAwesomeIcons.locationDot,
-                            size: 12,
-                            color: AppColors.accent,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${widget.spot.locationInfo.city}, ${widget.spot.locationInfo.state}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                      const SizedBox(width: 4),
+                      Text(
+                        spot.rating.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -469,99 +420,110 @@ class _SpotCardState extends State<_SpotCard> {
               ),
             ],
           ),
-
-          // rating & last visit
+          
+          // Content
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
-                  FontAwesomeIcons.solidStar,
-                  size: 14,
-                  color: Colors.amber,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${widget.spot.rating} (${widget.spot.photoCount} photos)',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-                const Spacer(),
-                const Text(
-                  'Last visit: 2 weeks ago',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // tags
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Wrap(
-              spacing: 8,
-              children: [
-                for (final tag in widget.spot.tags.take(2))
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGray,
-                      borderRadius: BorderRadius.circular(8),
+                // Title and location
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            spot.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.locationDot,
+                                size: 14,
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${spot.locationInfo.city}, ${spot.locationInfo.state}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _tagIcon(tag),
-                        const SizedBox(width: 4),
-                        Text(
+                  ],
+                ),
+                
+                const SizedBox(height: 12),
+                
+                // Tags
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final tag in ['Landscape', 'Sunset', 'Mountains'])
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
                           tag,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white,
+                            color: AppColors.accent,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ],
+                      ),
+                  ],
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildActionButton(
+                        context,
+                        'Directions',
+                        FontAwesomeIcons.directions,
+                        AppColors.primary,
+                      ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-
-          // action buttons
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-            child: Row(
-              children: [
-                _ActionButton(
-                  icon: FontAwesomeIcons.route,
-                  label: 'Directions',
-                  backgroundColor: AppColors.primary,
-                  textColor: Colors.white,
-                  onTap: () {},
-                ),
-                const SizedBox(width: 8),
-                _ActionButton(
-                  icon: FontAwesomeIcons.shareNodes,
-                  label: 'Share',
-                  backgroundColor: AppColors.lightGray,
-                  textColor: Colors.white,
-                  onTap: () {},
-                ),
-                const Spacer(),
-                _ActionButton(
-                  icon: FontAwesomeIcons.ellipsisVertical,
-                  label: '',
-                  backgroundColor: AppColors.lightGray,
-                  textColor: Colors.white,
-                  onTap: () {},
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildActionButton(
+                        context,
+                        'Share',
+                        FontAwesomeIcons.share,
+                        AppColors.accent,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildActionButton(
+                        context,
+                        'More',
+                        FontAwesomeIcons.ellipsis,
+                        Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -571,93 +533,34 @@ class _SpotCardState extends State<_SpotCard> {
     );
   }
 
-  // helpers ------------------------------------------------------------------
-  Widget _tagIcon(String tag) {
-    const map = {
-      'Golden Hour': FontAwesomeIcons.solidSun,
-      'Landscape': FontAwesomeIcons.mountain,
-      'Scenic': FontAwesomeIcons.eye,
-      'Urban': FontAwesomeIcons.city,
-      'Waterfront': FontAwesomeIcons.water,
-      'Forest': FontAwesomeIcons.tree,
-      'Sunset': FontAwesomeIcons.solidSun,
-      'Seascape': FontAwesomeIcons.water,
-      'Nature': FontAwesomeIcons.tree,
-    };
-    return Icon(
-      map[tag] ?? FontAwesomeIcons.circle,
-      size: 12,
-      color: _getTagIconColor(tag),
-    );
-  }
-
-  Color _getTagIconColor(String tag) {
-    const colorMap = {
-      'Golden Hour': Colors.amber,
-      'Sunset': Colors.amber,
-      'Landscape': Colors.blue,
-      'Mountain': Colors.blue,
-      'Urban': Colors.blue,
-      'City': Colors.blue,
-      'Waterfront': Colors.blue,
-      'Water': Colors.blue,
-      'Forest': Colors.green,
-      'Tree': Colors.green,
-      'Nature': Colors.green,
-    };
-    return colorMap[tag] ?? Colors.grey;
-  }
-}
-
-/// Action button with icon and optional label
-class _ActionButton extends StatelessWidget {
-  const _ActionButton({
-    required this.icon,
-    required this.label,
-    required this.backgroundColor,
-    required this.textColor,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final Color backgroundColor;
-  final Color textColor;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: label.isNotEmpty ? 12 : 8,
-          vertical: 8,
+  Widget _buildActionButton(BuildContext context, String label, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: color.withOpacity(0.3),
+          width: 1,
         ),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 12,
-              color: textColor,
+      ),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 16,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: color,
+              fontWeight: FontWeight.w500,
             ),
-            if (label.isNotEmpty) ...[
-              const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: textColor,
-                ),
-              ),
-            ],
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

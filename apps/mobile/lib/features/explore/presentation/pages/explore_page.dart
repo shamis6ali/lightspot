@@ -113,7 +113,7 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.dark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: DefaultTextStyle.merge(
         style: const TextStyle(fontSize: 14),
         child: Stack(
@@ -150,6 +150,7 @@ class _ExplorePageState extends State<ExplorePage> {
             },
             onCameraIdle: _clusterMgr.updateMap,
             onCameraMove: _clusterMgr.onCameraMove,
+            myLocationEnabled: true,
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             compassEnabled: false,
@@ -173,7 +174,6 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-
   FloatingActionButton _buildFab() => FloatingActionButton(
     backgroundColor: AppColors.accent,
     shape: const CircleBorder(),
@@ -187,14 +187,14 @@ class _ExplorePageState extends State<ExplorePage> {
   Widget _circleIcon(IconData icon) => Container(
     width: 40,
     height: 40,
-    decoration: const BoxDecoration(
-      color: AppColors.darkGray,
+    decoration: BoxDecoration(
+      color: Theme.of(context).cardColor,
       shape: BoxShape.circle,
       boxShadow: [
         BoxShadow(color: Colors.black54, blurRadius: 4, offset: Offset(0, 2)),
       ],
     ),
-    child: Center(child: Icon(icon, size: 16, color: Colors.white)),
+    child: Center(child: Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurface)),
   );
 
   Widget _tagIcon(String tag) {
@@ -206,7 +206,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return Icon(
       map[tag] ?? FontAwesomeIcons.circle,
       size: 12,
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.onSurface,
     );
   }
 

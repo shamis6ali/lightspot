@@ -141,4 +141,27 @@ class AppColors {
   static const darkPrimary = Color(0xFF90CAF9);
   static const darkText = Color(0xFFFFFFFF);
   static const darkTextSecondary = Color(0xFFB0B0B0);
+
+  // Light Theme Colors
+  static const lightBackground = Color(0xFFFAFAFA);
+  static const lightSurface = Color(0xFFFFFFFF);
+  static const lightPrimary = Color(0xFF1976D2);
+  static const lightText = Color(0xFF212121);
+  static const lightTextSecondary = Color(0xFF757575);
+  static const lightCard = Color(0xFFFFFFFF);
+  static const lightBorder = Color(0xFFE0E0E0);
+
+  // Dark Theme Colors
+  static const darkCard = Color(0xFF1E1E1E);
+  static const darkBorder = Color(0xFF2A2A2A);
+}
+
+// Theme-aware color getters
+extension AppColorsTheme on AppColors {
+  static Color getBackground(bool isDark) => isDark ? AppColors.darkBackground : AppColors.lightBackground;
+  static Color getSurface(bool isDark) => isDark ? AppColors.darkSurface : AppColors.lightSurface;
+  static Color getCard(bool isDark) => isDark ? AppColors.darkCard : AppColors.lightCard;
+  static Color getBorder(bool isDark) => isDark ? AppColors.darkBorder : AppColors.lightBorder;
+  static Color getText(bool isDark) => isDark ? AppColors.darkText : AppColors.lightText;
+  static Color getTextSecondary(bool isDark) => isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
 }

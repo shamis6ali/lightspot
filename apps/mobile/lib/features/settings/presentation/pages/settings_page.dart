@@ -4,6 +4,8 @@ import 'package:lightspot_v1/common/theme/app_colors.dart';
 import 'package:lightspot_v1/common/util/nav.dart';
 import 'package:lightspot_v1/features/auth/presentation/pages/login_screen.dart';
 import '../../../../common/data/app_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:lightspot_v1/common/theme/theme_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -13,7 +15,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _darkMode = true;
   bool _locationServices = true;
   bool _autoSavePhotos = false;
   bool _showPopularSpots = true;
@@ -21,7 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.dark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -40,10 +41,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.lightGray,
+            color: Theme.of(context).dividerColor,
             width: 1,
           ),
         ),
@@ -51,17 +52,17 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Settings',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               FontAwesomeIcons.magnifyingGlass,
               color: AppColors.accent,
             ),
@@ -98,10 +99,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildProfileSection() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.lightGray,
+            color: Theme.of(context).dividerColor,
             width: 1,
           ),
         ),
@@ -131,12 +132,12 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Alex Johnson',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -144,7 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   '@alexphotospot',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[400],
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -211,11 +212,9 @@ class _SettingsPageState extends State<SettingsPage> {
           iconColor: Colors.indigo,
           title: 'Dark Mode',
           hasToggle: true,
-          toggleValue: _darkMode,
+          toggleValue: context.watch<ThemeProvider>().isDarkMode,
           onToggleChanged: (value) {
-            setState(() {
-              _darkMode = value;
-            });
+            context.read<ThemeProvider>().setThemeMode(value);
           },
         ),
         _buildSettingItem(
@@ -364,14 +363,14 @@ class _SettingsPageState extends State<SettingsPage> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Colors.grey[400],
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
             ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: AppColors.darkGray,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -399,7 +398,7 @@ class _SettingsPageState extends State<SettingsPage> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.lightGray,
+            color: Theme.of(context).dividerColor,
             width: 1,
           ),
         ),
@@ -421,8 +420,8 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         title: Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 16,
           ),
         ),
@@ -433,7 +432,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Text(
                 value!,
                 style: TextStyle(
-                  color: Colors.grey[400],
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   fontSize: 14,
                 ),
               ),
@@ -445,13 +444,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: onToggleChanged,
                 activeColor: AppColors.accent,
                 activeTrackColor: AppColors.accent.withOpacity(0.3),
-                inactiveTrackColor: Colors.grey[700],
-                inactiveThumbColor: Colors.grey[400],
+                inactiveTrackColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                inactiveThumbColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
             ] else if (hasArrow) ...[
               Icon(
                 FontAwesomeIcons.chevronRight,
-                color: Colors.grey[500],
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 size: 14,
               ),
             ],
@@ -470,7 +469,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: ElevatedButton.icon(
           onPressed: () => _handleLogout(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.darkGray,
+            backgroundColor: Theme.of(context).cardColor,
             foregroundColor: AppColors.accent,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
@@ -497,26 +496,26 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.darkGray,
-          title: const Text(
+          backgroundColor: Theme.of(context).cardColor,
+          title: Text(
             'Logout',
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.bold,
             ),
           ),
-          content: const Text(
+          content: Text(
             'Are you sure you want to logout?',
             style: TextStyle(
-              color: Colors.white70,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text(
+              child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
               ),
             ),
             TextButton(

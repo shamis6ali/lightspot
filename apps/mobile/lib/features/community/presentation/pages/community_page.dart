@@ -31,20 +31,18 @@ class _CommunityPageState extends State<CommunityPage> {
     final bottomInset = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: AppColors.dark,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Stories section
-            _buildStoriesSection(),
-            // Tabs
-            _buildTabs(),
-            // Content feed
-            Expanded(
-              child: _buildContentFeed(bottomInset),
-            ),
-          ],
-        ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Column(
+        children: [
+          // Stories section
+          _buildStoriesSection(),
+          // Tabs
+          _buildTabs(),
+          // Content feed
+          Expanded(
+            child: _buildContentFeed(bottomInset),
+          ),
+        ],
       ),
       floatingActionButton: _buildFloatingActionButton(bottomInset),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -61,8 +59,8 @@ class _CommunityPageState extends State<CommunityPage> {
     ];
 
     return Container(
-      color: AppColors.darkGray,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      color: Theme.of(context).cardColor,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: SizedBox(
         height: 68,
         child: ListView.separated(
@@ -98,9 +96,9 @@ class _CommunityPageState extends State<CommunityPage> {
           const SizedBox(height: 3),
           Text(
             story['name'],
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],
@@ -131,9 +129,9 @@ class _CommunityPageState extends State<CommunityPage> {
         const SizedBox(height: 3),
         Text(
           story['name'],
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ],
@@ -144,10 +142,10 @@ class _CommunityPageState extends State<CommunityPage> {
     final tabs = ['Feed', 'Challenges', 'Discussions'];
     
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.lightGray,
+            color: Theme.of(context).dividerColor,
             width: 1,
           ),
         ),
@@ -172,7 +170,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     tabs[i],
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: i == _activeTab ? AppColors.accent : Colors.grey,
+                      color: i == _activeTab ? AppColors.accent : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                       fontWeight: i == _activeTab ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
@@ -242,7 +240,7 @@ class _CommunityPageState extends State<CommunityPage> {
       itemCount: posts.length,
       separatorBuilder: (_, __) => Container(
         height: 1,
-        color: AppColors.lightGray,
+        color: Theme.of(context).dividerColor,
       ),
       itemBuilder: (_, i) => _buildPostCard(posts[i]),
     );
@@ -272,25 +270,25 @@ class _CommunityPageState extends State<CommunityPage> {
                   children: [
                     Text(
                       post['user'],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           FontAwesomeIcons.locationDot,
                           size: 12,
-                          color: Colors.grey,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           post['location'],
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                           ),
                         ),
                       ],
@@ -300,9 +298,9 @@ class _CommunityPageState extends State<CommunityPage> {
               ),
               IconButton(
                 onPressed: () {},
-                icon: const Icon(
+                icon: Icon(
                   FontAwesomeIcons.ellipsisVertical,
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -330,7 +328,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.darkGray.withOpacity(0.7),
+                    color: Theme.of(context).cardColor.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -421,15 +419,15 @@ class _CommunityPageState extends State<CommunityPage> {
                   children: [
                     TextSpan(
                       text: post['user'],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     TextSpan(
                       text: ' ${post['caption']}',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -438,17 +436,17 @@ class _CommunityPageState extends State<CommunityPage> {
               const SizedBox(height: 4),
               Text(
                 'View all ${post['comments']} comments',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 post['timeAgo'],
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
             ],
@@ -471,7 +469,7 @@ class _CommunityPageState extends State<CommunityPage> {
         children: [
           Icon(
             icon,
-            color: isActive ? AppColors.accent : Colors.grey,
+            color: isActive ? AppColors.accent : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             size: 20,
           ),
           if (label.isNotEmpty) ...[
@@ -479,7 +477,7 @@ class _CommunityPageState extends State<CommunityPage> {
             Text(
               label,
               style: TextStyle(
-                color: isActive ? AppColors.accent : Colors.white,
+                color: isActive ? AppColors.accent : Theme.of(context).colorScheme.onSurface,
                 fontSize: 14,
               ),
             ),
@@ -490,22 +488,22 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   Widget _buildChallengesTab() {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             FontAwesomeIcons.trophy,
             size: 80,
-            color: Colors.grey,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'Challenges Coming Soon',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
         ],
@@ -514,22 +512,22 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   Widget _buildDiscussionsTab() {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             FontAwesomeIcons.comments,
             size: 80,
-            color: Colors.grey,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'Discussions Coming Soon',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
         ],

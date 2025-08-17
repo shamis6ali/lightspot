@@ -23,6 +23,9 @@ dependencies:
   # -- networking
   http: ^1.1.0
 
+  # -- state management
+  provider: ^6.1.2
+
   # -- other
   nav: ^1.4.3
   injectable: ^2.5.0

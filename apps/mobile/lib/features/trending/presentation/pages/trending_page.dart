@@ -31,16 +31,13 @@ class _TrendingPageState extends State<TrendingPage> {
     final bottomInset = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: AppColors.dark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          // Status bar spacer
-          SizedBox(height: topInset),
-          // Filter tabs
-          _buildFilterTabs(),
-          // Main content
+          SizedBox(height: topInset), // Status bar spacer
+          _buildFilterTabs(), // Filter tabs
           Expanded(
-            child: _buildMainContent(bottomInset),
+            child: _buildMainContent(bottomInset), // Main content
           ),
         ],
       ),
@@ -48,42 +45,40 @@ class _TrendingPageState extends State<TrendingPage> {
   }
 
   Widget _buildFilterTabs() {
-    final tabs = ['Most Popular', 'Recent Uploads', 'Most Visited', 'Top Rated'];
+    final tabs = ['All', 'Landscape', 'Urban', 'Portrait'];
     
     return Container(
-      color: AppColors.darkGray,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (int i = 0; i < tabs.length; i++)
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: GestureDetector(
-                  onTap: () => setState(() => _activeTab = i),
-                  child: Container(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: i == _activeTab ? AppColors.accent : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          for (int i = 0; i < tabs.length; i++)
+            Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() => _activeTab = i),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: i == _activeTab ? AppColors.accent : Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: i == _activeTab ? AppColors.accent : Theme.of(context).dividerColor,
+                      width: 1,
                     ),
-                    child: Text(
-                      tabs[i],
-                      style: TextStyle(
-                        color: i == _activeTab ? AppColors.accent : Colors.grey,
-                        fontWeight: i == _activeTab ? FontWeight.bold : FontWeight.normal,
-                      ),
+                  ),
+                  child: Text(
+                    tabs[i],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: i == _activeTab ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                      fontWeight: i == _activeTab ? FontWeight.bold : FontWeight.normal,
+                      fontSize: 12,
                     ),
                   ),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -93,19 +88,15 @@ class _TrendingPageState extends State<TrendingPage> {
       padding: EdgeInsets.only(bottom: 70 + bottomInset),
       child: Column(
         children: [
-          // Featured Spot (filtered by rating > 4.5)
-          _buildFeaturedSpot(),
-          // Landscape Hotspots
+          _buildFeaturedSpot(), // Featured Spot (filtered by rating > 4.5)
           _buildCategorySection(
             title: 'Landscape Hotspots',
             child: _buildLandscapeSpots(),
           ),
-          // Urban Photography
           _buildCategorySection(
             title: 'Urban Photography',
             child: _buildUrbanSpots(),
           ),
-          // Community Picks
           _buildCategorySection(
             title: 'Community Picks',
             child: _buildCommunityPicks(),
@@ -116,7 +107,6 @@ class _TrendingPageState extends State<TrendingPage> {
   }
 
   Widget _buildFeaturedSpot() {
-    // Filter spots by rating > 4.5 for the featured section
     final highRatedSpots = _getAllSpots().where((spot) {
       final rating = double.tryParse(spot['rating'].split(' ')[0]) ?? 0.0;
       return rating > 4.5;
@@ -126,15 +116,14 @@ class _TrendingPageState extends State<TrendingPage> {
       return const SizedBox.shrink();
     }
 
-    // Use the highest rated spot as featured
-    final featuredSpot = highRatedSpots.first;
+    final featuredSpot = highRatedSpots.first; // Using the first high-rated spot
 
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white, width: 2),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -294,33 +283,22 @@ class _TrendingPageState extends State<TrendingPage> {
     ];
   }
 
-  Widget _buildCategorySection({required String title, required Widget child}) {
+  Widget _buildCategorySection({
+    required String title,
+    required Widget child,
+  }) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'See All',
-                  style: TextStyle(
-                    color: AppColors.accent,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
         ),
         child,
@@ -329,90 +307,87 @@ class _TrendingPageState extends State<TrendingPage> {
   }
 
   Widget _buildLandscapeSpots() {
-    final spots = [
-      {
-        'name': 'Mountain View',
-        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/961b7e6051-8e95810ccd7b8e3e402e.png',
-        'rating': '4.6 (98)',
-        'location': 'Rocky Mountains',
-        'isBookmarked': true,
-      },
-      {
-        'name': 'Silhouette Peak',
-        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/6640d4652c-6a810963b8c96c69501f.png',
-        'rating': '4.5 (76)',
-        'location': 'Highland Ridge',
-        'isBookmarked': false,
-      },
-      {
-        'name': 'Stargazer Point',
-        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/3166949e97-78f34d6a95096130cd67.png',
-        'rating': '4.9 (112)',
-        'location': 'Dark Sky Reserve',
-        'isBookmarked': false,
-      },
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SizedBox(
-        height: 160,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: spots.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 12),
-          itemBuilder: (_, i) => _buildLandscapeCard(spots[i]),
-        ),
+    return SizedBox(
+      height: 200,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: 5,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, i) => _buildLandscapeCard(i),
       ),
     );
   }
 
-  Widget _buildLandscapeCard(Map<String, dynamic> spot) {
+  Widget _buildLandscapeCard(int index) {
+    final spots = [
+      {
+        'name': 'Mountain Peak',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/961b7e6051-8e95810ccd7b8e3e402e.png',
+        'rating': '4.8',
+        'location': 'Rocky Mountains',
+      },
+      {
+        'name': 'Sunset Valley',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/d6533f3869-4e94eb3eeb9e8f55506f.png',
+        'rating': '4.7',
+        'location': 'Grand Canyon',
+      },
+      {
+        'name': 'Alpine Lake',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/6640d4652c-6a810963b8c96c69501f.png',
+        'rating': '4.6',
+        'location': 'Swiss Alps',
+      },
+      {
+        'name': 'Desert Dunes',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/3166949e97-78f34d6a95096130cd67.png',
+        'rating': '4.5',
+        'location': 'Sahara Desert',
+      },
+      {
+        'name': 'Forest Path',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg',
+        'rating': '4.4',
+        'location': 'Black Forest',
+      },
+    ];
+
+    final spot = spots[index % spots.length];
+
     return Container(
       width: 160,
       decoration: BoxDecoration(
-        color: AppColors.darkGray,
-        borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor,
+          width: 1,
+        ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image with bookmark
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                child: Image.network(
-                  spot['image'],
-                  width: 160,
-                  height: 128,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Icon(
-                  spot['isBookmarked'] 
-                      ? FontAwesomeIcons.solidBookmark 
-                      : FontAwesomeIcons.bookmark,
-                  color: Colors.white,
-                  size: 16,
-                ),
-              ),
-            ],
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
+            child: Image.network(
+              spot['image']!,
+              width: double.infinity,
+              height: 120,
+              fit: BoxFit.cover,
+            ),
           ),
-          // Content
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  spot['name'],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                  spot['name']!,
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -425,10 +400,10 @@ class _TrendingPageState extends State<TrendingPage> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      spot['rating'],
-                      style: const TextStyle(
+                      spot['rating']!,
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Colors.grey,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ),
                   ],
@@ -436,18 +411,18 @@ class _TrendingPageState extends State<TrendingPage> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       FontAwesomeIcons.locationDot,
-                      color: AppColors.accent,
-                      size: 12,
+                      size: 10,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                     ),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        spot['location'],
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
+                        spot['location']!,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -463,154 +438,129 @@ class _TrendingPageState extends State<TrendingPage> {
   }
 
   Widget _buildUrbanSpots() {
-    final spots = [
-      {
-        'name': 'Downtown Skyline',
-        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg',
-        'rating': '4.7',
-        'description': 'Perfect for night cityscape photography with reflections',
-        'photos': '186 photos',
-      },
-      {
-        'name': 'Historic District',
-        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg',
-        'rating': '4.5',
-        'description': 'Cobblestone streets and architecture from the 1800s',
-        'photos': '142 photos',
-      },
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          for (final spot in spots)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _buildUrbanCard(spot),
-            ),
-        ],
+    return SizedBox(
+      height: 200,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: 5,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, i) => _buildUrbanCard(i),
       ),
     );
   }
 
-  Widget _buildUrbanCard(Map<String, dynamic> spot) {
+  Widget _buildUrbanCard(int index) {
+    final spots = [
+      {
+        'name': 'City Skyline',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/6379450ba0-4ab9c1c76053ea803d0b.png',
+        'rating': '4.7',
+        'location': 'New York',
+      },
+      {
+        'name': 'Street Art',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg',
+        'rating': '4.6',
+        'location': 'Berlin',
+      },
+      {
+        'name': 'Modern Architecture',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg',
+        'rating': '4.5',
+        'location': 'Dubai',
+      },
+      {
+        'name': 'Historic District',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg',
+        'rating': '4.4',
+        'location': 'Rome',
+      },
+      {
+        'name': 'Night Lights',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg',
+        'rating': '4.3',
+        'location': 'Tokyo',
+      },
+    ];
+
+    final spot = spots[index % spots.length];
+
     return Container(
+      width: 160,
       decoration: BoxDecoration(
-        color: AppColors.darkGray,
-        borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor,
+          width: 1,
+        ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
             child: Image.network(
-              spot['image'],
-              width: 96,
-              height: 96,
+              spot['image']!,
+              width: double.infinity,
+              height: 120,
               fit: BoxFit.cover,
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        spot['name'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            FontAwesomeIcons.solidStar,
-                            color: Colors.amber,
-                            size: 12,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            spot['rating'],
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  spot['name']!,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    spot['description'],
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(
+                      FontAwesomeIcons.solidStar,
+                      color: Colors.amber,
+                      size: 12,
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            FontAwesomeIcons.camera,
-                            color: AppColors.accent,
-                            size: 12,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            spot['photos'],
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                    const SizedBox(width: 4),
+                    Text(
+                      spot['rating']!,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                       ),
-                      Row(
-                        children: [
-                          _buildCustomMarker(),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  FontAwesomeIcons.directions,
-                                  color: Colors.white,
-                                  size: 10,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Go',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.locationDot,
+                      size: 10,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        spot['location']!,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
@@ -620,186 +570,133 @@ class _TrendingPageState extends State<TrendingPage> {
 
   Widget _buildCustomMarker() {
     return Container(
-      width: 20,
-      height: 20,
+      width: 24,
+      height: 24,
       decoration: BoxDecoration(
         color: AppColors.accent,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
-          bottomRight: Radius.circular(2),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white, width: 2),
       ),
-      child: Center(
-        child: Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(5),
-          ),
+      child: const Center(
+        child: Icon(
+          FontAwesomeIcons.mapPin,
+          color: Colors.white,
+          size: 12,
         ),
       ),
     );
   }
 
   Widget _buildCommunityPicks() {
-    final picks = [
-      {
-        'name': 'Waterfall Canyon',
-        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg',
-        'author': 'PhotoMaster',
-        'likes': '243',
-        'comments': '32',
-      },
-      {
-        'name': 'Foggy Forest',
-        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg',
-        'author': 'NatureLens',
-        'likes': '187',
-        'comments': '21',
-      },
-    ];
-
-    return Padding(
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.8,
-        children: [
-          for (final pick in picks)
-            _buildCommunityCard(pick),
-        ],
-      ),
+      itemCount: 3,
+      separatorBuilder: (_, __) => const SizedBox(height: 16),
+      itemBuilder: (_, i) => _buildCommunityCard(i),
     );
   }
 
-  Widget _buildCommunityCard(Map<String, dynamic> pick) {
+  Widget _buildCommunityCard(int index) {
+    final picks = [
+      {
+        'name': 'Community Choice #1',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg',
+        'rating': '4.9',
+        'votes': '156 votes',
+        'description': 'Amazing sunset captured by our community!',
+      },
+      {
+        'name': 'Community Choice #2',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg',
+        'rating': '4.8',
+        'votes': '142 votes',
+        'description': 'Incredible urban photography moment.',
+      },
+      {
+        'name': 'Community Choice #3',
+        'image': 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg',
+        'rating': '4.7',
+        'votes': '128 votes',
+        'description': 'Stunning landscape that wowed everyone.',
+      },
+    ];
+
+    final pick = picks[index % picks.length];
+
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkGray,
-        borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor,
+          width: 1,
+        ),
       ),
-      child: Column(
+      child: Row(
         children: [
-          // Image with heart button
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                child: Image.network(
-                  pick['image'],
-                  width: double.infinity,
-                  height: 144,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      FontAwesomeIcons.solidHeart,
-                      color: AppColors.accent,
-                      size: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          ClipRRect(
+            borderRadius: const BorderRadius.horizontal(left: Radius.circular(11)),
+            child: Image.network(
+              pick['image']!,
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+            ),
           ),
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pick['name'],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.white,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    pick['name']!,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(
-                      FontAwesomeIcons.user,
-                      color: Colors.grey,
-                      size: 12,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'by ${pick['author']}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(
+                        FontAwesomeIcons.solidStar,
+                        color: Colors.amber,
+                        size: 12,
                       ),
+                      const SizedBox(width: 4),
+                      Text(
+                        pick['rating']!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        pick['votes']!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    pick['description']!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.solidHeart,
-                          color: AppColors.accent,
-                          size: 12,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          pick['likes'],
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.comment,
-                          color: Colors.grey,
-                          size: 12,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          pick['comments'],
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
