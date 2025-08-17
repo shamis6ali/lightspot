@@ -62,9 +62,9 @@ class _CommunityPageState extends State<CommunityPage> {
 
     return Container(
       color: AppColors.darkGray,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Increased vertical padding
       child: SizedBox(
-        height: 68,
+        height: 80, // Increased height to prevent overflow
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: stories.length,
@@ -81,27 +81,29 @@ class _CommunityPageState extends State<CommunityPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 52,
-            height: 52,
+            width: 56, // Slightly larger
+            height: 56, // Slightly larger
             decoration: BoxDecoration(
               color: AppColors.primary,
-              borderRadius: BorderRadius.circular(26),
+              borderRadius: BorderRadius.circular(28),
             ),
             child: const Center(
               child: Icon(
                 FontAwesomeIcons.plus,
                 color: Colors.white,
-                size: 16,
+                size: 18, // Slightly larger icon
               ),
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 4), // Increased spacing
           Text(
             story['name'],
             style: const TextStyle(
-              fontSize: 10,
+              fontSize: 11, // Slightly larger font
               color: Colors.white,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       );
@@ -111,30 +113,32 @@ class _CommunityPageState extends State<CommunityPage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 52,
-          height: 52,
+          width: 56, // Slightly larger
+          height: 56, // Slightly larger
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(26),
+            borderRadius: BorderRadius.circular(28),
             border: Border.all(
               color: story['viewed'] ? Colors.grey : AppColors.accent,
               width: 2,
             ),
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(26),
             child: Image.network(
               story['avatar'],
               fit: BoxFit.cover,
             ),
           ),
         ),
-        const SizedBox(height: 3),
+        const SizedBox(height: 4), // Increased spacing
         Text(
           story['name'],
           style: const TextStyle(
-            fontSize: 10,
+            fontSize: 11, // Slightly larger font
             color: Colors.white,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
