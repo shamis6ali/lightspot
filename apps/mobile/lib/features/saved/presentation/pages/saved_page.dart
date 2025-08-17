@@ -2,12 +2,12 @@
 // -----------------------------------------------------------------------------
 //  "Saved" screen for the Photography‑Spots app
 // -----------------------------------------------------------------------------
-//  Reuses palette (AppColors), BottomNav, and Spot model from the Explore page.
-//  Hook it into your router or set `home: SavedPage()` in main.dart to test.
+//  Beautiful redesign matching the provided design with proper status bar handling
 // -----------------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
 
 import '../../../explore/data/models/spot.dart';
 import 'package:lightspot_v1/common/theme/app_colors.dart';
@@ -30,10 +30,23 @@ class _SavedPageState extends State<SavedPage> {
 
   final Set<String> _liked = {};
 
+  @override
+  void initState() {
+    super.initState();
+    // Set status bar to transparent to avoid overlap
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+  }
+
   // ────────────────────────────────────────────────────────────── UI BUILD ───
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
+    final topInset = MediaQuery.of(context).padding.top;
 
     // apply simple client‑side tag filter
     final filtered =
@@ -46,66 +59,66 @@ class _SavedPageState extends State<SavedPage> {
 
     return Scaffold(
       backgroundColor: AppColors.dark,
-      body: _buildBody(filtered, bottomInset),
-      floatingActionButton: _buildFab(bottomInset),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: _buildBody(filtered, bottomInset, topInset),
     );
   }
 
   // Main scrollable content ---------------------------------------------------
-  Widget _buildBody(List<Spot> spots, double bottomInset) {
+  Widget _buildBody(List<Spot> spots, double bottomInset, double topInset) {
     final edgeBottom = 70 + 14 + bottomInset; // nav‑bar + gap + safe‑area
 
     return CustomScrollView(
-      slivers: [
-        const SliverToBoxAdapter(child: _ProfileBar()),
-        SliverToBoxAdapter(
-          child: _CategoryRow(
-            active: _activeCategory,
-            onSelected: (i) => setState(() => _activeCategory = i),
+              slivers: [
+          // Status bar spacer
+          SliverToBoxAdapter(
+            child: SizedBox(height: topInset),
           ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, edgeBottom),
-          sliver: SliverList.builder(
-            itemCount: spots.length,
-            itemBuilder:
-                (_, idx) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _SpotCard(
-                    spot: spots[idx],
-                    liked: _liked.contains(spots[idx].name),
-                    onLikeToggled: (isLiked) {
-                      // maintain the set in parent
-                      setState(() {
-                        if (isLiked) {
-                          _liked.add(spots[idx].name);
-                        } else {
-                          _liked.remove(spots[idx].name);
-                        }
-                      });
-                    },
+          // Profile section
+          const SliverToBoxAdapter(child: _ProfileBar()),
+          // Stats section
+          const SliverToBoxAdapter(child: _StatsSection()),
+          // Category filters
+          SliverToBoxAdapter(
+            child: _CategoryRow(
+              active: _activeCategory,
+              onSelected: (i) => setState(() => _activeCategory = i),
+            ),
+          ),
+          // Spots list
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16, 12, 16, edgeBottom),
+            sliver: SliverList.builder(
+              itemCount: spots.length,
+              itemBuilder:
+                  (_, idx) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _SpotCard(
+                      spot: spots[idx],
+                      liked: _liked.contains(spots[idx].name),
+                      onLikeToggled: (isLiked) {
+                        // maintain the set in parent
+                        setState(() {
+                          if (isLiked) {
+                            _liked.add(spots[idx].name);
+                          } else {
+                            _liked.remove(spots[idx].name);
+                          }
+                        });
+                      },
+                    ),
                   ),
-                ),
+            ),
           ),
-        ),
-      ],
+        ],
     );
   }
 
-  // plus button ---------------------------------------------------------------
-  Widget _buildFab(double bottomInset) => Padding(
-    padding: EdgeInsets.only(bottom: 70 + bottomInset + 10),
-    child: FloatingActionButton(
-      backgroundColor: AppColors.accent,
-      shape: const CircleBorder(),
-      onPressed: () {},
-      child: const Icon(FontAwesomeIcons.plus),
-    ),
-  );
+
 }
 
 // ───────────────────────────────────────────────────────────────── COMPONENTS ─
+
+
 
 /// Avatar + name + share button bar.
 class _ProfileBar extends StatelessWidget {
@@ -115,34 +128,50 @@ class _ProfileBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.darkGray,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Image.network(
-              'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg',
-              width: 48,
-              height: 48,
-              fit: BoxFit.cover,
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: AppColors.accent, width: 2),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(22),
+              child: Image.network(
+                'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg',
+                width: 44,
+                height: 44,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Jessica Parker',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 2),
-              Text(
-                '42 saved photography spots',
-                style: TextStyle(fontSize: 10, color: Colors.grey),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Jessica Parker',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  '42 saved photography spots',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
           Container(
             decoration: BoxDecoration(
               color: AppColors.primary,
@@ -151,14 +180,104 @@ class _ProfileBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               children: const [
-                Icon(FontAwesomeIcons.shareNodes, size: 12),
+                Icon(
+                  FontAwesomeIcons.shareNodes,
+                  size: 12,
+                  color: Colors.white,
+                ),
                 SizedBox(width: 4),
-                Text('Share', style: TextStyle(fontSize: 10)),
+                Text(
+                  'Share',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Statistics section with total photos, categories, and countries
+class _StatsSection extends StatelessWidget {
+  const _StatsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.dark,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Expanded(
+            child: _StatItem(
+              label: 'Total Photos',
+              value: '248',
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 40,
+            color: AppColors.lightGray,
+          ),
+          Expanded(
+            child: _StatItem(
+              label: 'Categories',
+              value: '8',
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 40,
+            color: AppColors.lightGray,
+          ),
+          Expanded(
+            child: _StatItem(
+              label: 'Countries',
+              value: '12',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Individual stat item
+class _StatItem extends StatelessWidget {
+  const _StatItem({
+    required this.label,
+    required this.value,
+  });
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -179,41 +298,51 @@ class _CategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    return Container(
+      color: AppColors.dark,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          for (var i = 0; i < _chipData.length; i++)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: GestureDetector(
-                onTap: () => onSelected(i),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: i == active ? AppColors.accent : AppColors.darkGray,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  child: Row(
-                    children: [
-                      if (_chipData[i].$1 != null) ...[
-                        Icon(_chipData[i].$1!, size: 10),
-                        const SizedBox(width: 4),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (var i = 0; i < _chipData.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: GestureDetector(
+                  onTap: () => onSelected(i),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: i == active ? AppColors.accent : AppColors.darkGray,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    child: Row(
+                      children: [
+                        if (_chipData[i].$1 != null) ...[
+                          Icon(
+                            _chipData[i].$1!,
+                            size: 12,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                        Text(
+                          _chipData[i].$2,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
-                      Text(
-                        _chipData[i].$2,
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -252,20 +381,28 @@ class _SpotCardState extends State<_SpotCard> {
       ),
       child: Column(
         children: [
-          // cover image + heart
+          // cover image + heart + overlay
           Stack(
             children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Image.network(widget.spot.coverUrl, fit: BoxFit.cover),
+              Container(
+                height: 192, // 48 * 4 = 192px
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: Image.network(
+                    widget.spot.coverUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
+              // Heart button
               Positioned(
-                top: 8,
-                right: 8,
+                top: 12,
+                right: 12,
                 child: GestureDetector(
                   onTap: () {
                     setState(() => _liked = !_liked);
-                    widget.onLikeToggled(_liked); // bubble up to SavedPage
+                    widget.onLikeToggled(_liked);
                   },
                   child: Container(
                     decoration: const BoxDecoration(
@@ -275,14 +412,15 @@ class _SpotCardState extends State<_SpotCard> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       _liked
-                          ? FontAwesomeIcons
-                              .solidHeart // filled
-                          : FontAwesomeIcons.heart, // outline
+                          ? FontAwesomeIcons.solidHeart
+                          : FontAwesomeIcons.heart,
                       size: 12,
+                      color: Colors.white,
                     ),
                   ),
                 ),
               ),
+              // Gradient overlay with title and location
               Positioned(
                 left: 0,
                 right: 0,
@@ -292,10 +430,10 @@ class _SpotCardState extends State<_SpotCard> {
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
-                      colors: [Colors.black54, Colors.transparent],
+                      colors: [Colors.black, Colors.transparent],
                     ),
                   ),
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -303,22 +441,25 @@ class _SpotCardState extends State<_SpotCard> {
                         widget.spot.name,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 16,
+                          color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
                       Row(
                         children: [
                           const Icon(
                             FontAwesomeIcons.locationDot,
-                            size: 10,
+                            size: 12,
                             color: AppColors.accent,
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${widget.spot.latLng.latitude.toStringAsFixed(2)}, '
-                            '${widget.spot.latLng.longitude.toStringAsFixed(2)}',
-                            style: const TextStyle(fontSize: 10),
+                            '${widget.spot.locationInfo.city}, ${widget.spot.locationInfo.state}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -329,25 +470,31 @@ class _SpotCardState extends State<_SpotCard> {
             ],
           ),
 
-          // rating & last visit (mocked)
+          // rating & last visit
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
                 const Icon(
                   FontAwesomeIcons.solidStar,
-                  size: 12,
+                  size: 14,
                   color: Colors.amber,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '${widget.spot.rating} (${widget.spot.photoCount} photos)',
-                  style: const TextStyle(fontSize: 12),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
                 ),
                 const Spacer(),
                 const Text(
-                  'Last visit: 2w',
-                  style: TextStyle(fontSize: 10, color: Colors.grey),
+                  'Last visit: 2 weeks ago',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
@@ -357,16 +504,16 @@ class _SpotCardState extends State<_SpotCard> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Wrap(
-              spacing: 6,
+              spacing: 8,
               children: [
                 for (final tag in widget.spot.tags.take(2))
                   Container(
                     decoration: BoxDecoration(
                       color: AppColors.lightGray,
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
+                      horizontal: 8,
                       vertical: 4,
                     ),
                     child: Row(
@@ -374,7 +521,13 @@ class _SpotCardState extends State<_SpotCard> {
                       children: [
                         _tagIcon(tag),
                         const SizedBox(width: 4),
-                        Text(tag, style: const TextStyle(fontSize: 10)),
+                        Text(
+                          tag,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -387,11 +540,29 @@ class _SpotCardState extends State<_SpotCard> {
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
             child: Row(
               children: [
-                _circleIcon(FontAwesomeIcons.route),
-                const SizedBox(width: 12),
-                _circleIcon(FontAwesomeIcons.shareNodes),
+                _ActionButton(
+                  icon: FontAwesomeIcons.route,
+                  label: 'Directions',
+                  backgroundColor: AppColors.primary,
+                  textColor: Colors.white,
+                  onTap: () {},
+                ),
+                const SizedBox(width: 8),
+                _ActionButton(
+                  icon: FontAwesomeIcons.shareNodes,
+                  label: 'Share',
+                  backgroundColor: AppColors.lightGray,
+                  textColor: Colors.white,
+                  onTap: () {},
+                ),
                 const Spacer(),
-                _circleIcon(FontAwesomeIcons.ellipsisVertical),
+                _ActionButton(
+                  icon: FontAwesomeIcons.ellipsisVertical,
+                  label: '',
+                  backgroundColor: AppColors.lightGray,
+                  textColor: Colors.white,
+                  onTap: () {},
+                ),
               ],
             ),
           ),
@@ -401,16 +572,6 @@ class _SpotCardState extends State<_SpotCard> {
   }
 
   // helpers ------------------------------------------------------------------
-  Widget _circleIcon(IconData icon) => Container(
-    width: 32,
-    height: 32,
-    decoration: const BoxDecoration(
-      color: AppColors.lightGray,
-      shape: BoxShape.circle,
-    ),
-    child: Center(child: Icon(icon, size: 12)),
-  );
-
   Widget _tagIcon(String tag) {
     const map = {
       'Golden Hour': FontAwesomeIcons.solidSun,
@@ -419,8 +580,86 @@ class _SpotCardState extends State<_SpotCard> {
       'Urban': FontAwesomeIcons.city,
       'Waterfront': FontAwesomeIcons.water,
       'Forest': FontAwesomeIcons.tree,
+      'Sunset': FontAwesomeIcons.solidSun,
+      'Seascape': FontAwesomeIcons.water,
+      'Nature': FontAwesomeIcons.tree,
     };
-    return Icon(map[tag] ?? FontAwesomeIcons.circle, size: 10);
+    return Icon(
+      map[tag] ?? FontAwesomeIcons.circle,
+      size: 12,
+      color: _getTagIconColor(tag),
+    );
+  }
+
+  Color _getTagIconColor(String tag) {
+    const colorMap = {
+      'Golden Hour': Colors.amber,
+      'Sunset': Colors.amber,
+      'Landscape': Colors.blue,
+      'Mountain': Colors.blue,
+      'Urban': Colors.blue,
+      'City': Colors.blue,
+      'Waterfront': Colors.blue,
+      'Water': Colors.blue,
+      'Forest': Colors.green,
+      'Tree': Colors.green,
+      'Nature': Colors.green,
+    };
+    return colorMap[tag] ?? Colors.grey;
+  }
+}
+
+/// Action button with icon and optional label
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.backgroundColor,
+    required this.textColor,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: label.isNotEmpty ? 12 : 8,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 12,
+              color: textColor,
+            ),
+            if (label.isNotEmpty) ...[
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: textColor,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }
 
