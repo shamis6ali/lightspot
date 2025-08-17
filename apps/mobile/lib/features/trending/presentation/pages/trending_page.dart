@@ -356,7 +356,7 @@ class _TrendingPageState extends State<TrendingPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
-        height: 160,
+        height: 200, // Significantly increased height to prevent overflow
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: spots.length,
@@ -376,37 +376,42 @@ class _TrendingPageState extends State<TrendingPage> {
       ),
       child: Column(
         children: [
-          // Image with bookmark
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                child: Image.network(
-                  spot['image'],
-                  width: 160,
-                  height: 128,
-                  fit: BoxFit.cover,
+          // Image with bookmark - Fixed height
+          SizedBox(
+            height: 120,
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                  child: Image.network(
+                    spot['image'],
+                    width: 160,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Icon(
-                  spot['isBookmarked'] 
-                      ? FontAwesomeIcons.solidBookmark 
-                      : FontAwesomeIcons.bookmark,
-                  color: Colors.white,
-                  size: 16,
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Icon(
+                    spot['isBookmarked'] 
+                        ? FontAwesomeIcons.solidBookmark 
+                        : FontAwesomeIcons.bookmark,
+                    color: Colors.white,
+                    size: 16,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          // Content
-          Padding(
+          // Content - Fixed height container
+          Container(
+            height: 80, // Fixed height for content area
             padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   spot['name'],
                   style: const TextStyle(
@@ -414,8 +419,11 @@ class _TrendingPageState extends State<TrendingPage> {
                     fontSize: 14,
                     color: Colors.white,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
+                // Rating
                 Row(
                   children: [
                     const Icon(
@@ -424,16 +432,21 @@ class _TrendingPageState extends State<TrendingPage> {
                       size: 12,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      spot['rating'],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                    Expanded(
+                      child: Text(
+                        spot['rating'],
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
+                // Location
                 Row(
                   children: [
                     const Icon(
@@ -449,6 +462,7 @@ class _TrendingPageState extends State<TrendingPage> {
                           fontSize: 12,
                           color: Colors.white,
                         ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -501,6 +515,7 @@ class _TrendingPageState extends State<TrendingPage> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align to top to prevent overflow
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
@@ -516,19 +531,27 @@ class _TrendingPageState extends State<TrendingPage> {
               padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min, // Prevent overflow
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start, // Align to top
                     children: [
-                      Text(
-                        spot['name'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
+                      Expanded( // Prevent text overflow
+                        child: Text(
+                          spot['name'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      const SizedBox(width: 8),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(
                             FontAwesomeIcons.solidStar,
@@ -554,29 +577,39 @@ class _TrendingPageState extends State<TrendingPage> {
                       fontSize: 12,
                       color: Colors.grey,
                     ),
+                    maxLines: 2, // Limit to 2 lines to prevent overflow
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            FontAwesomeIcons.camera,
-                            color: AppColors.accent,
-                            size: 12,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            spot['photos'],
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
+                      Expanded( // Prevent overflow
+                        child: Row(
+                          children: [
+                            const Icon(
+                              FontAwesomeIcons.camera,
+                              color: AppColors.accent,
+                              size: 12,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                spot['photos'],
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           _buildCustomMarker(),
                           const SizedBox(width: 8),
@@ -671,16 +704,25 @@ class _TrendingPageState extends State<TrendingPage> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.8,
+      child: Column(
         children: [
-          for (final pick in picks)
-            _buildCommunityCard(pick),
+          for (int i = 0; i < picks.length; i += 2)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildCommunityCard(picks[i]),
+                  ),
+                  if (i + 1 < picks.length) ...[
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildCommunityCard(picks[i + 1]),
+                    ),
+                  ],
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -693,39 +735,43 @@ class _TrendingPageState extends State<TrendingPage> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image with heart button
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                child: Image.network(
-                  pick['image'],
-                  width: double.infinity,
-                  height: 144,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(16),
+          AspectRatio(
+            aspectRatio: 1.0, // Square image
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                  child: Image.network(
+                    pick['image'],
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-                  child: const Center(
-                    child: Icon(
-                      FontAwesomeIcons.solidHeart,
-                      color: AppColors.accent,
-                      size: 16,
+                ),
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        FontAwesomeIcons.solidHeart,
+                        color: AppColors.accent,
+                        size: 14,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           // Content
           Padding(
@@ -733,6 +779,7 @@ class _TrendingPageState extends State<TrendingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   pick['name'],
                   style: const TextStyle(
@@ -740,8 +787,11 @@ class _TrendingPageState extends State<TrendingPage> {
                     fontSize: 14,
                     color: Colors.white,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
+                // Author
                 Row(
                   children: [
                     const Icon(
@@ -750,52 +800,70 @@ class _TrendingPageState extends State<TrendingPage> {
                       size: 12,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      'by ${pick['author']}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                    Expanded(
+                      child: Text(
+                        'by ${pick['author']}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
+                // Likes and comments
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.solidHeart,
-                          color: AppColors.accent,
-                          size: 12,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          pick['likes'],
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Icon(
+                            FontAwesomeIcons.solidHeart,
+                            color: AppColors.accent,
+                            size: 12,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              pick['likes'],
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.comment,
-                          color: Colors.grey,
-                          size: 12,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          pick['comments'],
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Icon(
+                            FontAwesomeIcons.comment,
+                            color: Colors.grey,
+                            size: 12,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              pick['comments'],
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
