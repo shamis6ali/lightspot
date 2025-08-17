@@ -1,71 +1,173 @@
-# LightSpot Frontend (Flutter)
+# LightSpot Monorepo
 
-Mobile client for **LightSpot** — _brief one-liner about what it does (e.g., “a location‑aware lighting assistant …”)_.  
-Android is the primary target. Secrets (e.g., Google Maps API key) are injected via Gradle placeholders and **not** committed.
+A full-stack application for discovering and sharing amazing locations, built with Flutter (mobile + web) and Node.js (backend API).
 
----
+## 🏗️ Project Structure
 
-## ⚙️ Tech Stack
+```
+lightspot-frontend/
+├── apps/
+│   ├── mobile/              # Flutter application (mobile + web)
+│   │   ├── lib/            # Shared Dart source code
+│   │   ├── android/        # Android configuration
+│   │   ├── ios/            # iOS configuration
+│   │   ├── web/            # Web configuration (auto-generated)
+│   │   └── pubspec.yaml    # Flutter dependencies
+│   └── backend/            # Node.js backend API
+│       ├── src/            # Express.js source code
+│       ├── config/         # Configuration files
+│       └── package.json    # Node.js dependencies
+├── packages/
+│   └── shared-types/       # Common types (if needed)
+├── assets/                 # Shared assets (images, icons)
+└── docs/                   # Documentation
+```
 
-- **Flutter** (Dart)
-- **Android** target (Gradle Kotlin DSL)
-- Google Maps (or your API of choice)
-- Backend: _(link to repo / API docs if applicable)_
+## 🚀 Getting Started
 
----
+### Prerequisites
 
-## 🚀 Quick Start (Android Studio)
+- **Flutter**: 3.32.7 or higher
+- **Node.js**: 18.0.0 or higher
+- **npm**: 9.0.0 or higher
 
-1. **Clone**
+### Installation
+
+1. **Clone the repository**
    ```bash
-   git clone git@github.com:shamis6ali/lightspot-frontend.git
+   git clone <your-repo-url>
    cd lightspot-frontend
    ```
-2. **Open Android Studio**
-   - “Open an existing project” → select repo root.
-   - Let it install any missing Android SDK components.
-3. **Install Flutter/Dart plugins**
-4. **Add your API key**
-   - Contact Shamis
-5. **Sync & Run**
-   - Click “Sync Project with Gradle Files”.
-   - Plug in a device or start an emulator.
-   - Press the play button
 
-## CLI Run (Optional)
+2. **Install dependencies**
+   ```bash
+   # Install root dependencies
+   npm install
+   
+   # Install web app dependencies
+   cd apps/web && npm install
+   
+   # Get Flutter dependencies
+   cd ../mobile && flutter pub get
+   ```
+
+### Development
+
+#### Mobile App (Flutter)
 ```bash
-flutter pub get
-flutter doctor
+# From root directory
+npm run dev:mobile
+
+# Or directly
+cd apps/mobile
 flutter run
 ```
 
-## Project Structure
+#### Web App (Flutter Web)
 ```bash
-lightspot-frontend/
-├─ lib/                     # Flutter source
-├─ android/
-│  ├─ app/
-│  │  └─ build.gradle.kts   # module build file (Kotlin DSL)
-│  ├─ local.properties      # contains MAPS_API_KEY (not committed)
-│  └─ src/main/AndroidManifest.xml
-├─ pubspec.yaml
-└─ README.md
+# From root directory
+npm run dev:web
+
+# Or directly
+cd apps/mobile
+flutter run -d chrome
 ```
 
-## Useful Commands
-| Action                  | Command                       |
-| ----------------------- | ----------------------------- |
-| Get dependencies        | `flutter pub get`             |
-| Analyze code            | `flutter analyze`             |
-| Run tests               | `flutter test`                |
-| Build release (Android) | `flutter build apk --release` |
+### Building
 
-## Contributing
-1. Branch: git checkout -b feature/your-thing
-2. Commit: Use conventional messages (feat:, fix:, etc.)
-3. Push and PR: git push origin feature/your-thing
-4. Request Review (let Shamis or Ammar know)
+#### Mobile App
+```bash
+# Build APK
+npm run build:mobile
 
-## Credits
-Shamis Ali
-Ammar Elzeftawy
+# Or directly
+cd apps/mobile
+flutter build apk
+```
+
+#### Web App
+```bash
+# Build for production
+npm run build:web
+
+# Or directly
+cd apps/mobile
+flutter build web
+```
+
+## 📱 Mobile App (Flutter)
+
+The Flutter mobile app provides:
+- Interactive maps with Google Maps
+- Location clustering
+- User authentication
+- Community features
+- Offline capabilities
+
+## 🌐 Web App (Flutter Web)
+
+The Flutter Web application offers:
+- Same codebase as mobile app
+- Consistent UI/UX across platforms
+- Responsive web interface
+- Shared business logic with mobile
+- Optimized web performance
+
+## 🔧 Backend API (Node.js)
+
+The Node.js backend provides:
+- RESTful API endpoints
+- User authentication & authorization
+- Location/Spot management
+- Data validation & sanitization
+- Rate limiting & security
+- MongoDB integration ready
+
+## 🔧 Shared Packages
+
+### @lightspot/shared-types
+Common TypeScript interfaces and types (if needed):
+- User management
+- Location/Spot data
+- API response structures
+- Pagination helpers
+
+## 🧪 Testing
+
+```bash
+# Test mobile app
+npm run test:mobile
+
+# Test backend API
+npm run test:backend
+```
+
+## 🧹 Cleaning
+
+```bash
+# Clean all projects
+npm run clean
+
+# Clean specific project
+npm run clean:mobile
+npm run clean:backend
+```
+
+## 📚 Documentation
+
+- [Mobile App Guide](docs/mobile.md)
+- [Web App Guide](docs/web.md)
+- [API Documentation](docs/api.md)
+- [Deployment Guide](docs/deployment.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

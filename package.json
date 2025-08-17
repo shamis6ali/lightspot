@@ -1,0 +1,33 @@
+{
+  "name": "lightspot-monorepo",
+  "version": "1.0.0",
+  "description": "LightSpot full-stack application with Flutter mobile app and Node.js web frontend",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:mobile": "cd apps/mobile && flutter run",
+    "dev:web": "cd apps/mobile && flutter run -d chrome",
+    "dev:backend": "cd apps/backend && npm run dev",
+    "build:mobile": "cd apps/mobile && flutter build apk",
+    "build:web": "cd apps/mobile && flutter build web",
+    "build:backend": "cd apps/backend && npm run build",
+    "test:mobile": "cd apps/mobile && flutter test",
+    "test:backend": "cd apps/backend && npm run test",
+    "clean": "npm run clean:mobile && npm run clean:backend",
+    "clean:mobile": "cd apps/mobile && flutter clean",
+    "clean:backend": "cd apps/backend && npm run clean",
+    "install:all": "npm install && cd apps/backend && npm install",
+    "start:backend": "cd apps/backend && npm start"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
