@@ -14,9 +14,9 @@ class SpotDetailsModal extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.35,
-      minChildSize: 0.25,
-      maxChildSize: 0.9,
+      initialChildSize: 0.6,
+      minChildSize: 0.4,
+      maxChildSize: 0.95,
       builder: (context, scrollCtl) {
         return Material(
           color: AppColors.darkGray,

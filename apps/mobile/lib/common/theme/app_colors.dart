@@ -25,7 +25,7 @@ class AppColors {
   static const textDisabled = Color(0xFFE0E0E0);
 
   // Accent Colors - Purple for FAB, matching your app
-  static const accent = Color(0xFF9C27B0); // Purple FAB color
+  static const accent = Color(0xFFFF3333); // Red accent color for links and buttons
   static const onAccent = Color(0xFFFFFFFF);
   static const secondary = Color(0xFF03DAC6);
   static const onSecondary = Color(0xFF000000);
